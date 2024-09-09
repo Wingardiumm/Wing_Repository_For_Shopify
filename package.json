@@ -1,5 +1,10 @@
 {
   "devDependencies": {
     "tailwindcss": "^3.4.10"
+  },
+  "scripts": {
+    "test": "echo \"Erorr: no test specified\" && exit 1",
+    "build-css": "tailwindcss -i ./src/tailwind.css -o ./assets/application.css",
+    "watch-css": "tailwindcss -i ./src/tailwind.css -o ./assets/application.css --watch"
   }
 }
