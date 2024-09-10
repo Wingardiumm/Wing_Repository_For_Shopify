@@ -1,6 +1,7 @@
-{% for product in collections.frontpage.products limit:4 %}
-  <div>
     {% section 'custom-slider' %}
+
+{% comment %} {% for product in collections.frontpage.products limit:4 %}
+  <div>
     <a href="{{ product.url | within: collection }}">{{ product.title }}</a>
     {{ product.price | money }}
     {% unless product.available %}<br><strong>sold out</strong>{% endunless %}
@@ -11,4 +12,4 @@
            height="{{ product.featured_image.height }}">
     </a>
   </div>
-{% endfor %}
+{% endfor %} {% endcomment %}
