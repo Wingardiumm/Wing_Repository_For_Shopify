@@ -71,12 +71,12 @@
 }
 {% endschema %}
 
-<div id="react-slider-root" style="width: 80%; margin: 0 auto;"></div>
+<!-- <div id="react-slider-root" style="width: 80%; margin: 0 auto;"></div> -->
 
 <script>
   window.sliderData = {
     heading: "{{ section.settings.heading }}",
-    maxImages: {{ section.settings.max_images }},
+    {% comment %} maxImages: {{ section.settings.max_images }},{% endcomment %}
     slideDirection: "{{ section.settings.slide_direction }}",
     autoplay: {{ section.settings.autoplay }},
     autoplaySpeed: {{ section.settings.autoplay_speed }},
