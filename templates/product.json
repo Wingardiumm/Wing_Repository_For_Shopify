@@ -1,7 +1,18 @@
+/*
+* ------------------------------------------------------------
+* IMPORTANT: The contents of this file are auto-generated.
+*
+* This file may be updated by the Shopify admin theme editor
+* or related systems. Please exercise caution as any changes
+* made to this file may be overwritten.
+* ------------------------------------------------------------
+*/
 {
   "sections": {
     "template":{
       "type": "template-product",
+      "settings": {
+      },
       "blocks":{
         "vendor": {"type": "vendor"},
         "title": {"type": "title"},
@@ -20,7 +31,16 @@
         "description",
         "checkout_buttons"
       ]
+    },
+    "contact_form_PTFkUr": {
+      "type": "contact-form",
+      "settings": {
+        "title": ""
+      }
     }
   },
-  "order": ["template"]
+  "order": [
+    "template",
+    "contact_form_PTFkUr"
+  ]
 }
