@@ -48,7 +48,7 @@
     </div>
 
     <div class="product--information sticky top-5 p-2">
-      {% form 'product',product %}
+      {% form 'product',product, id: 'product-form', novalidate: 'novalidate' %}
         <input type="hidden" name="id" value="{{ selected_variant.id }}">
 
         {% for block in section.blocks %}
@@ -64,7 +64,7 @@
                   </h1>
                 </div>
               {% when 'price' %}
-                <div class="my-3">
+                <div class="my-3" id="price-{{ section.id }}">
                   <span class="text-base text-gray-500 line-through">
                     {{ selected_variant.compare_at_price | money }}
                   </span>
@@ -78,7 +78,7 @@
                   {% endif %}
                 </div>
 
-              {% when variant_selector %}
+              {% when 'variant_selector' %}
                 <div class="my-3">
                   {% unless product.has_only_default_variant %}
                     <variant-selector data-url="{{ product.url }}" data-section="{{ section.id }}">
@@ -100,6 +100,11 @@
                                   {% endfor %}
                           </select>
                         </div>
+
+                        <script type="application/json">
+                          {{ product.variants | json }}
+                        </script>
+
                       {% endfor %}
                     </variant-selector>
                   {% endunless %}
@@ -128,7 +133,7 @@
                         disabled
                       {% endif %}
                       >
-                      {% if selected_variant.available == false%}
+                      {% if selected_variant.available == false %}
                         Sold out
                       {% else %}
                           Add to cart
@@ -156,7 +161,62 @@
       this.addEventListener("change", this.onVariantChange);
     }
     onVariantChange(){
-      console.log("I have changed the variant selector");
+      this.getSelectedOptions();
+      this.getSelectedVariant();
+
+      if(this.currentVariant) {
+        this.updateURL();
+        this.updateFormID();
+        this.updatePrice();
+      }
+    }
+    getSelectedOptions(){
+      this.options = Array.from(this.querySelectorAll('select'), (select) => select.value);
+      console.log(this.options);
+    }
+
+    getVariantJSON(){
+      this.variantData = this.variantData || JSON.parse(this.querySelector('[type="application/json"]').textContent);
+      return this.variantData;
+    }
+    getSelectedVariant(){
+      this.currentVariant = this.getVariantJSON().find(
+        (variant) => {
+          const findings = !variant.options.map(
+            (option, index) =>{
+              return this.options[index] === option;
+            }
+          ).includes(false);
+
+          if(findings) return variant;
+        }
+      );
+
+      console.log(this.currentVariant);
+    }
+
+    updateURL(){
+      if(!this.currentVariant) return;
+      window.history.replaceState({}, '', `${this.dataset.url}?variant=${this.currentVariant.id}`);
+    }
+
+    updateFormID(){
+      const form_input = document.querySelector("#product-form").querySelector('input[name="id"]');
+      form_input.value = this.currentVariant.id;
+    }
+
+    updatePrice(){
+      fetch(`${this.dataset.url}?variant=${this.currentVariant.id}&section_id=${this.dataset.section}`)
+      .then((response) => response.text())
+      .then((responseText) => {
+        const id = `price-${this.dataset.section}`;
+        const html = new DOMParser().parseFromString(responseText, 'text/html');
+
+        const oldPrice = document.getElementById(id);
+        const newPrice = html.getElementById(id);
+        console.log(html);
+        if(oldPrice && newPrice) oldPrice.innerHTML = newPrice.innerHTML;
+      });
     }
   }
   customElements.define("variant-selector",VariantSelector);
